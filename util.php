@@ -43,5 +43,5 @@ function isSuc(array $res)
 
 function getPDO()
 {
-    return new PDO('mysql:dbname=btc;host=127.0.0.1', DB_NAME, DB_PWD);
+    return new PDO(DB_DSN, DB_NAME, DB_PWD);
 }

@@ -234,7 +234,7 @@ function queryBuy($order, PDO $pdo)
     $pdo->beginTransaction();
     // 订单售出状态
     $num = $order['num'];
-    if ($order['sale_price'] / $order['buy_price'] > 1.10) {
+    if ($order['sale_price'] > $order['buy_price']) {
         $num = $num * 0.98;
         if ($num > 100) {
             $num = intval($num);
@@ -243,6 +243,10 @@ function queryBuy($order, PDO $pdo)
         } else {
             $num = $order['num'];
         }
+    }
+    global $map;
+    if (is_callable($map[$order['symbol']])) {
+        $num = $map[$order['symbol']]($num);
     }
     $pdo->prepare(
         "update orders set status = ?, `num` = ?, `direction` = 'sale' where `id` = ?;"
