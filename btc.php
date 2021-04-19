@@ -234,7 +234,7 @@ function queryBuy($order, PDO $pdo)
     $pdo->beginTransaction();
     // 订单售出状态
     $num = $order['num'];
-    if ($order['sale_price'] > $order['buy_price']) {
+    if ($order['sale_price'] / $order['buy_price'] > 1.10) {
         $num = $num * 0.98;
         if ($num > 100) {
             $num = intval($num);
@@ -307,7 +307,7 @@ function querySale($order, PDO $pdo)
     $sale_total = $res['data']['field_cash_amount'];
     logger('查询卖出完成: buy_order_id' . $order['buy_order_id']);
     $num = $order['num'];
-    if ($order['sale_price'] / $order['buy_price'] > 1.07) {
+    if ($order['sale_price'] > $order['buy_price']) {
         $num = $num * sprintf("%.3f", $order['sale_price'] / $order['buy_price']);
         if ($num > 100) {
             $num = intval($num);
@@ -317,7 +317,10 @@ function querySale($order, PDO $pdo)
             $num = $order['num'];
         }
     }
-
+    global $map;
+    if (is_callable($map[$order['symbol']])) {
+        $num = $map[$order['symbol']]($num);
+    }
     $pdo->beginTransaction();
     // 订单买入状态
     $pdo->prepare(
