@@ -19,8 +19,14 @@ while (true) {
 
 function edit()
 {
+    $columnLenMap = [
+        'id' => 4,
+        'status' => 6,
+        'num' => 6,
+    ];
+
     $pdo = getPDO();
-    $sql = 'select * from orders where status = 4';
+    $sql = 'select id, symbol, buy_price, sale_price, num, status, direction from orders where status = 4';
     $i = 0;
     $symbols = [];
     foreach ($pdo->query($sql, PDO::FETCH_ASSOC) as $row) {
@@ -30,7 +36,11 @@ function edit()
                 if (in_array($key, ['ctime', 'mtime'])) {
                     continue;
                 }
-                echo $key . "\t";
+                $len = 9;
+                if (isset($columnLenMap[$key])) {
+                    $len = $columnLenMap[$key];
+                }
+                echo str_pad($key, $len) . "\t";
             }
             echo "\n";
         }
@@ -39,7 +49,11 @@ function edit()
             if (in_array($key, ['ctime', 'mtime'])) {
                 continue;
             }
-            echo $value . " \t";
+            $len = 9;
+            if (isset($columnLenMap[$key])) {
+                $len = $columnLenMap[$key];
+            }
+            echo str_pad($value, $len) . " \t";
         }
         echo "\n";
     }
