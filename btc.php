@@ -238,8 +238,8 @@ function queryBuy($order, PDO $pdo)
         $num = $num * 0.98;
         if ($num > 100) {
             $num = intval($num);
-        } elseif ($num > 1) {
-            $num = sprintf("%.2f", $num);
+        } elseif ($num > 0.1) {
+            $num = sprintf("%.3f", $num);
         } else {
             $num = $order['num'];
         }
@@ -311,8 +311,8 @@ function querySale($order, PDO $pdo)
         $num = $num * sprintf("%.3f", $order['sale_price'] / $order['buy_price']);
         if ($num > 100) {
             $num = intval($num);
-        } elseif ($num > 1) {
-            $num = sprintf("%.2f", $num);
+        } elseif ($num > 0.1) {
+            $num = sprintf("%.3f", $num);
         } else {
             $num = $order['num'];
         }
