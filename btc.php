@@ -269,12 +269,6 @@ function queryBuy($order, PDO $pdo)
 
 function orderSale($order, PDO $pdo)
 {
-    // 两个特殊币不挣钱,仅为了存币
-    if (in_array($order['symbol'], ['shibusdt', 'dogeusdt'])) {
-        if ($order['sale_price'] / $order['buy_price'] > 1.08) {
-            $order['num'] = intval($order['num'] / ($order['sale_price'] / $order['buy_price'] - 0.02));
-        }
-    }
     $res = buy($order['symbol'], 'sell-limit', $order['sale_price'], $order['num']);
     if (!isSuc($res)) {
         loggerErr('创建订单失败:' . $order['id']);
