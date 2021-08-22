@@ -51,6 +51,8 @@ function orderHistory(string $symbol = "all")
     $path = '/v1/order/history';
     $param = [
         'symbol' => $symbol,
+        'start-time' => (time() - 86400) * 1000,
+        'end-time' => time() * 1000,
     ];
     $param = makeSign("GET", HOST, $path, $param);
     $res = getQuery(getRealUrl($path, $param));
