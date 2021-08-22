@@ -1,9 +1,7 @@
 <?php
 
-date_default_timezone_set('PRC');
-
-include_once __DIR__ . '/api.php';
 include_once __DIR__ . '/util.php';
+include_once __DIR__ . '/api.php';
 include_once __DIR__ . '/config.php';
 
 $historyRes = orderHistory();
