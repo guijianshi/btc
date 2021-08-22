@@ -58,6 +58,7 @@ function orderHistory(string $symbol = "all")
     $res = getQuery(getRealUrl($path, $param));
 
     if ('ok' !== $res['status']) {
+        echo json_encode($param);
         return err($res['err-msg']?? '请求错误');
     }
     return suc($res['data']);

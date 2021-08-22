@@ -6,7 +6,6 @@ include_once __DIR__ . '/config.php';
 
 date_default_timezone_set("UTC");
 
-echo implode('T', explode(' ', date('yy-m-d H:i:s', time()))) . PHP_EOL;
 
 $historyRes = orderHistory();
 
