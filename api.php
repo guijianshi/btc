@@ -46,13 +46,11 @@ function makeSign($method, $baseUrl, $path, $param)
     return $param;
 }
 
-function orderHistory(string $symbol = "all", string $period = '1min', int $size = 50)
+function orderHistory(string $symbol = "all")
 {
     $path = '/v1/order/history';
     $param = [
         'symbol' => $symbol,
-        'period' => $period,
-        'size' => $size,
     ];
     $param = makeSign("GET", HOST, $path, $param);
     $res = getQuery(getRealUrl($path, $param));

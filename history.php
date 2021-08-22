@@ -4,6 +4,8 @@ include_once __DIR__ . '/util.php';
 include_once __DIR__ . '/api.php';
 include_once __DIR__ . '/config.php';
 
+date_default_timezone_set("UTC");
+
 $historyRes = orderHistory();
 
 if (!isSuc($historyRes)) {
