@@ -15,7 +15,7 @@ if (!isSuc($historyRes)) {
 }
 
 foreach ($historyRes['data'] as $item) {
-    if ('filled' != $item['filled']) {
+    if ('filled' != $item['state']) {
         logger("订单撤销或部分撤销");
         continue;
     }

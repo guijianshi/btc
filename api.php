@@ -33,7 +33,7 @@ function getQuery($url)
 
 function makeSign($method, $baseUrl, $path, $param)
 {
-    $date = implode('T', explode(' ', date('yy-m-d H:i:s', time())));
+    $date = implode('T', explode(' ', date('Y-m-d H:i:s', time())));
     $param['AccessKeyId'] = ACCESS_KEY;
     $param['SignatureMethod'] = 'HmacSHA256';
     $param['SignatureVersion'] = '2';
@@ -46,13 +46,10 @@ function makeSign($method, $baseUrl, $path, $param)
     return $param;
 }
 
-function orderHistory(string $symbol = "all")
+function orderHistory()
 {
     $path = '/v1/order/history';
     $param = [
-        'symbol' => $symbol,
-        'start-time' => (time() - 86400) * 1000,
-        'end-time' => time() * 1000,
     ];
     $param = makeSign("GET", HOST, $path, $param);
     $res = getQuery(getRealUrl($path, $param));
