@@ -45,3 +45,20 @@ function makeSign($method, $baseUrl, $path, $param)
     $param['Signature'] = $sign;
     return $param;
 }
+
+function orderHistory(string $symbol = "all", string $period = '1min', int $size = 50)
+{
+    $path = '/v1/order/history';
+    $param = [
+        'symbol' => $symbol,
+        'period' => $period,
+        'size' => $size,
+    ];
+    $param = makeSign("GET", HOST, $path, $param);
+    $res = getQuery(getRealUrl($path, $param));
+
+    if ('ok' !== $res['status']) {
+        return err($res['err-msg']?? '请求错误');
+    }
+    return suc($res['data']);
+}

@@ -4,6 +4,7 @@ date_default_timezone_set('PRC');
 
 include_once __DIR__ . '/util.php';
 include_once __DIR__ . '/config.php';
+include_once __DIR__ . '/api.php';
 
 const STATUS_WAIT = 0; // 初始化
 const STATUS_BUY_ING = 1; // 购买中
@@ -356,42 +357,6 @@ function orderCancel($order, PDO $pdo)
     $pdo->commit();
 }
 /* ----------- */
-
-
-
-function kline(string $symbol, string $period = '1min', int $size = 10)
-{
-    $path = '/market/history/kline';
-    $param = [
-        'symbol' => $symbol,
-        'period' => $period,
-        'size' => $size,
-    ];
-    $param = makeSign("GET", HOST, $path, $param);
-    $res = getQuery(getRealUrl($path, $param));
-
-    if ('ok' !== $res['status']) {
-        return err($res['err-msg']?? '请求错误');
-    }
-    return suc($res['data']);
-}
-
-function history()
-{
-    $path = '/v1/account/history';
-    $param = [
-        'account-id' => ACCOUNT_ID,
-        'size' => 30,
-    ];
-    $param = makeSign("GET", HOST, $path, $param);
-    $res = getQuery(getRealUrl($path, $param));
-
-    if ('ok' !== $res['status']) {
-        return err($res['err-msg']?? '请求错误');
-    }
-    return suc($res['data']);
-}
-
 
 function accounts()
 {
