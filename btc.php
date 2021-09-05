@@ -136,37 +136,6 @@ function query($order_id)
     return suc(['state' => $state, 'field_cash_amount' => $amount]);
 }
 
-function makeSign($method, $baseUrl, $path, $param)
-{
-    $date = implode('T', explode(' ', date('Y-m-d H:i:s', time())));
-    $param['AccessKeyId'] = ACCESS_KEY;
-    $param['SignatureMethod'] = 'HmacSHA256';
-    $param['SignatureVersion'] = '2';
-    $param['Timestamp'] = $date;
-    ksort($param);
-    $param_str = http_build_query($param);
-    $param_str = "$method\n$baseUrl\n$path\n$param_str";
-    $sign = base64_encode(hash_hmac('sha256', $param_str, SECRET, true));
-    $param['Signature'] = $sign;
-    return $param;
-}
-
-
-
-function getRealUrl($path, $paramSign)
-{
-    return 'https://' . HOST . $path . '?' . http_build_query($paramSign);
-}
-
-function getQuery($url)
-{
-    $res_str = file_get_contents($url);
-    logger(sprintf('请求返回: %s', $res_str));
-    return json_decode($res_str, true);
-}
-
-
-
 /* ----------- */
 function orderBuy($order, PDO $pdo)
 {
