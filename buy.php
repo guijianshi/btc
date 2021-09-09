@@ -190,16 +190,7 @@ function buy()
     fwrite(STDOUT, "确认购买请输入Y/N:");
     $check = trim(fgets(STDIN));
     if ('Y' === strtoupper($check)) {
-        $pdo = getPDO();
-        $flag = $pdo->exec(
-            sprintf(
-                "insert into orders (symbol, buy_price, sale_price, buy_order_id, num) values ('%s', %s, %s, '', %s)",
-                $symbol,
-                $buy_price,
-                $sale_price,
-                $num
-            )
-        );
+        $flag = buySave($symbol, $buy_price, $sale_price, $num);
         if ($flag) {
             fwrite(STDOUT, "新增任务成功" . PHP_EOL);
         } else {
@@ -207,5 +198,131 @@ function buy()
         }
     } else {
         fwrite(STDOUT, "任务已取消" .  PHP_EOL);
+    }
+}
+
+/**
+ * 网格策略
+ */
+function grid()
+{
+    while (true) {
+        fwrite(STDOUT, "请输入购买虚拟币名称,小写字母:");;
+        $symbol = trim(fgets(STDIN)) . 'usdt';  // 从控制台读取输入
+        $res = kline($symbol);
+        if (!isSuc($res)) {
+            fwrite(STDOUT, "输入虚拟币不存在");
+            continue;
+        }
+        fwrite(STDOUT, "当前最高价为:" . $res['data'][0]['high']  . PHP_EOL);
+        break;
+    }
+    while (true) {
+        fwrite(STDOUT, sprintf("请输入%s买入最低价格:", $symbol));
+        $buy_price = trim(fgets(STDIN));  // 买入价格
+        if (is_numeric($buy_price)) {
+            break;
+        }
+        fwrite(STDOUT, '价格必须是数字' . PHP_EOL);
+    }
+
+    while (true) {
+        fwrite(STDOUT, sprintf("请输入%s买入最高价格:", $symbol));
+        $buy_price = trim(fgets(STDIN));  // 买入价格
+        if (is_numeric($buy_price)) {
+            break;
+        }
+        fwrite(STDOUT, '价格必须是数字' . PHP_EOL);
+    }
+
+    // 自动判断模式 头尾小于1.6倍为小模式
+}
+
+
+
+
+
+function buySave($symbol, $buy_price, $sale_price, $num)
+{
+    $pdo = getPDO();
+    return $pdo->exec(
+        sprintf(
+            "insert into orders (symbol, buy_price, sale_price, buy_order_id, num) values ('%s', %s, %s, '', %s)",
+            $symbol,
+            $buy_price,
+            $sale_price,
+            $num
+        )
+    );
+}
+
+
+class Grid {
+
+    public function addGrid($symbol, $button_price, $percent, $total)
+    {
+        $one = sprintf("%.2f", $total / 5);
+    }
+
+    public function genSubGrids($symbol, $button_price, $percent, $total)
+    {
+        $data = [];
+        $one = sprintf("%.2f", $total / 5);
+        $buy_price = $this->getPrice($button_price);
+        for ($i = 0; $i < 5; $i++) {
+            $sale_price = $this->getPrice($buy_price * (1 + $percent * 0.01));
+            $data[] = [
+                "symbol" => $symbol,
+                "buy_price" => $buy_price,
+                "sale_price" => $sale_price,
+                "num" => ""
+            ];
+        }
+    }
+
+    // 保存一个交易网格
+    public function saveGrid($symbol, $buy_price, $sale_price, $num) {
+        $pdo = getPDO();
+        return $pdo->exec(
+            sprintf(
+                "insert into grid_order (symbol, top_price, bottom_price, num) values ('%s', %s, %s, %s)",
+                $symbol,
+                $buy_price,
+                $sale_price,
+                $num
+            )
+        );
+    }
+
+    // 保存一个交易
+    public function saveOrder($symbol, $buy_price, $sale_price, $num) {
+        $pdo = getPDO();
+        return $pdo->exec(
+            sprintf(
+                "insert into grid_order (symbol, top_price, bottom_price, num) values ('%s', %s, %s, %s)",
+                $symbol,
+                $buy_price,
+                $sale_price,
+                $num
+            )
+        );
+    }
+
+    public function getPrice($price)
+    {
+        // 最后一位价格固定为9标识是grid策略订单
+        if ($price < 0.00001) {
+            fwrite(STDOUT, '单币价值太低,不能购买' . PHP_EOL);
+            exit();
+        } elseif ($price < 0.0001) {
+            $price = sprintf("%.6f9", $price); // 最后一位价格固定为9标识是grid策略订单
+        } elseif ($price < 0.01) {
+            $price = sprintf("%.5f9", $price); //
+        }elseif ($price < 100) {
+            $price = sprintf("%.3f9", $price); //
+        } else {
+            $price = sprintf("%.1f9", $price); //
+        }
+        return $price;
     }
 }
