@@ -3,6 +3,7 @@ declare (strict_types = 1);
 
 namespace app\command\btc;
 
+use app\model\Order;
 use think\console\Command;
 use think\console\Input;
 use think\console\input\Argument;
@@ -48,6 +49,18 @@ class Buy extends Command
         $output->info("买入价:{$buyPrice}, 卖出价:{$salePrice}, 买入金额:{$total}usdt");
 
         $output->info("买入数量:{$num}, 预计盈利:{$earn}usdt");
+
+        $order = new Order();
+        $order->symbol = $symbol;
+        $order->buy_price = $buyPrice;
+        $order->sale_price = $salePrice;
+        $order->num = $num;
+
+        if ($order->save()) {
+            $output->info("添加成功");
+        } else {
+            $output->info("添加失败");
+        }
     }
 
     public function getSymbolByInput()
