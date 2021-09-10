@@ -20,6 +20,7 @@ use think\Model;
  * @property string $sale_order_id
  * @property string $status
  * @property string $direction
+ * @property string $parentId
  */
 class Order extends Model
 {

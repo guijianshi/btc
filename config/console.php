@@ -6,5 +6,6 @@ return [
     // 指令定义
     'commands' => [
         'btc:buy' => app\command\btc\Buy::class,
+        'btc:auto' => app\command\btc\OrderAutoTask::class,
     ],
 ];

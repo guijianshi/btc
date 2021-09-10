@@ -40,6 +40,7 @@ CREATE TABLE `orders` (
   `num` varchar(10) NOT NULL DEFAULT '0' COMMENT '购买数量(万分之一个)',
   `status` tinyint(4) unsigned NOT NULL DEFAULT '0' COMMENT '状态0',
   `direction` varchar(20) NOT NULL DEFAULT '' COMMENT '交易方向,pay/sale',
+  `parent_id` varchar(20) NOT NULL DEFAULT '' COMMENT '根订单号,空未无,其他为有',
   `ctime` datetime DEFAULT CURRENT_TIMESTAMP,
   `mtime` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`) USING BTREE
