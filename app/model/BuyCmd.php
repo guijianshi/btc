@@ -57,11 +57,11 @@ class BuyCmd
     {
         while (true) {
             $command = strtolower(trim($this->getInput("请输入操作命令:")));
-            if (in_array($command, ['a', 'b', 'e', 'g'])) {
+            if (in_array($command, ['a', 'b', 'e', 'g', 'c'])) {
                 $this->command = $command;
                 break;
             }
-            $this->output->info("支持该命令");
+            $this->output->info("不支持该命令");
         }
     }
 
@@ -193,7 +193,7 @@ class BuyCmd
         return trim(fgets(STDIN));
     }
 
-    public function setConfirm()
+    public function setConfirm(): bool
     {
         $confirm = strtoupper($this->getInput("确认操作Y/N:"));
         if ($confirm === 'Y') {
@@ -201,7 +201,7 @@ class BuyCmd
         } else {
             $this->confirm = false;
         }
-        return;
+        return $this->confirm;
     }
 
     /**

@@ -26,6 +26,7 @@ class Buy extends Command
         $output->info("g:新增网格任务");
         $output->info("e:编辑普通任务");
         $output->info("a:查看所有任务");
+        $output->info("c:清除冗余任务");
         $buyCmd = new BuyCmd($output);
         $buyCmd->PutCommand();
         switch ($buyCmd->getCommand()) {
@@ -38,9 +39,23 @@ class Buy extends Command
             case 'a':
                 $this->getAll();
                 break;
+            case 'c':
+                $this->clear($buyCmd);
+                break;
             default:
                 $output->info("命令错误");
                 break;
+        }
+    }
+
+    public function clear(BuyCmd $buyCmd)
+    {
+        if ($buyCmd->setConfirm()) {
+            if ((new Order())->delOldCancelTask()) {
+                $this->output->info("删除成功!");
+            } else {
+                $this->output->error("删除失败!");
+            }
         }
     }
 

@@ -35,4 +35,13 @@ class Order extends Model
         }
         return $query->limit(200)->select();
     }
+
+    public function delOldCancelTask()
+    {
+        $query = $this->where('status', 4)
+            ->where('grid_id', 0)
+            ->where('mtime', '<', date('Y-m-d', strtotime("-1week")));
+
+        return $query->limit(20)->delete();
+    }
 }
