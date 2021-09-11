@@ -309,19 +309,23 @@ class BuyCmd
             $bottomPrice = $this->formatPrice($bottomPrice);
 
             $num = $this->getBuyNum($itemTotal, $bottomPrice);
-
-            $this->output->info("{$i}: 买入金额{$bottomPrice}, 卖出金额{$top}, 买入数量 {$num}");
-
+            $salePrice = $this->formatPrice($top * 1.01);
+            if ($this->gridRate / 3 > 1) {
+                $tempRate = (($this->gridRate / 3) + 100) / 100;
+                $salePrice = $this->formatPrice($top * $tempRate);
+            }
             $subOrder[] = [
                 'symbol' => $this->symbol,
                 'buy_price' => $bottomPrice,
-                'sale_price' => $top,
+                'sale_price' => $this->formatPrice($salePrice),
                 'num' => $num,
             ];
 
             $top = $bottomPrice;
         }
-
+        foreach ($subOrder as $idx => $item) {
+            $this->output->info("{$idx}: 买入金额{$item['buy_price']}, 卖出金额{$item['sale_price']}, 买入数量 {$item['num']}");
+        }
         $this->output->info("=====================");
         $this->output->warning("{$this->symbol}:最高金额{$this->topPrice}, 最低金额{$bottomPrice}");
         $this->setConfirm();
