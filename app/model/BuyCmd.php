@@ -4,6 +4,7 @@
 namespace app\model;
 
 
+use app\dal\api\HuoBi;
 use think\console\Output;
 
 
@@ -26,6 +27,8 @@ class BuyCmd
     private $gridRate;
 
     private $gridNum;
+
+    private $avg;
 
     /**
      * @var string 最高金额用于网格交易
@@ -69,6 +72,15 @@ class BuyCmd
         $symbol = strtolower(trim($this->getInput('请输入购买虚拟币名称,小写字母:')));
         $this->symbol = $symbol . 'usdt';
         return;
+    }
+
+    /**
+     */
+    public function setAvg(): void
+    {
+        $avg = (new HuoBi())->getAvg($this->symbol);
+        $this->output->info("{$this->symbol} 最新价格: {$avg}");
+        $this->avg = $avg;
     }
 
     /**
@@ -120,6 +132,7 @@ class BuyCmd
             'btc' => '%.6f',
             'ar' => '%.2f',
             'eth' => '%.4f',
+            'cspr' => '%.1f',
         ];
         $coin = substr($this->symbol, 0, -4);
         if (isset($map[$coin])) {
@@ -235,6 +248,7 @@ class BuyCmd
     public function commonBuy():array
     {
         $this->setSymbol();
+        $this->setAvg();
         $this->setBuyPrice();
         $this->setSalePrice();
         $this->setTotal(function ($total) {
@@ -260,6 +274,7 @@ class BuyCmd
     public function gridBuy(): array
     {
         $this->setSymbol();
+        $this->setAvg();
         $this->setTopPrice();
         $this->setGridRate();
         $this->setGridNum();

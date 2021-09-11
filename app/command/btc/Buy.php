@@ -47,7 +47,6 @@ class Buy extends Command
     public function getAll()
     {
         $mod = $this->getInputWithCheckInArr(['m', 'g'], "请输入查看模式(标准/网格) m/g:");
-        $orders = [];
         if ($mod === 'm') {
             $this->output->info("打印普通任务列表");
             $orders = (new Order())->getRunningOrders();
