@@ -121,5 +121,29 @@ php earn.php
 ```
 
 
+5. tp更新
+```
+CREATE TABLE `grid_order` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `top_price` varchar(20) NOT NULL DEFAULT '' COMMENT '订单最高金额',
+  `grid_rate` varchar(5) NOT NULL COMMENT '每格利率',
+  `grid_num` tinyint(4) NOT NULL DEFAULT '0' COMMENT '网格数量',
+  `status` tinyint(4) NOT NULL DEFAULT '0' COMMENT '状态,0:初始化,1:已完结',
+  `ctime` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `mtime` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
+  `symbol` varchar(20) NOT NULL DEFAULT '' COMMENT '订单交易对',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='网格原始订单';
+
+
+alter table orders
+	add grid_id int default 0 not null comment '网格策略id';
+
+create index idx_grid_id
+	on orders (grid_id);
+
+```
+
+
 ### 最后说明
 币市有风险,投资需谨慎.

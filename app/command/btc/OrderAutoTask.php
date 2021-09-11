@@ -20,7 +20,7 @@ class orderAutoTask extends Command
     protected function execute(Input $input, Output $output)
     {
         // 指令输出
-        $res = (new HuoBi())->query(12121);
+        $res = (new HuoBi())->kline("btcusdt");
         $output->writeln('app\command\orderAutoTask');
         $output->writeln(json_encode($res));
     }
