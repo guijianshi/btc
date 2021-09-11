@@ -78,7 +78,11 @@ class BuyCmd
      */
     public function setAvg(): void
     {
-        $avg = (new HuoBi())->getAvg($this->symbol);
+        if (env("env.env", 'prod') != 'local') {
+            $avg = (new HuoBi())->getAvg($this->symbol);
+        } else {
+            $avg = 1;
+        }
         $this->output->info("{$this->symbol} 最新价格: {$avg}");
         $this->avg = $avg;
     }
@@ -155,6 +159,15 @@ class BuyCmd
 
     private function formatPrice($price)
     {
+        $map = [
+            'node' => '%.6f',
+            'shib' => '%.8f',
+        ];
+        $coin = substr($this->symbol, 0, -4);
+        if (isset($map[$coin])) {
+            $price = sprintf($map[$coin], $price) ;
+            return $price;
+        }
         if ($price > 100) {
             $price = sprintf("%.1f7", $price);
         } elseif ($price >= 1) {
