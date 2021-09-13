@@ -28,7 +28,7 @@ function action()
         if (STATUS_WAIT == $order['status']) {
             orderBuy($order, $pdo);
         } elseif (STATUS_BUY_ING == $order['status']) {
-            if (random_int(10, 20) % 1 != 0) {
+            if (random_int(10, 20) % 3 != 0) {
                 logger(sprintf('跳过:' . $order['id']));
                 continue;
             }
@@ -36,7 +36,7 @@ function action()
         } elseif (STATUS_SALE_WAIT == $order['status']) {
             orderSale($order, $pdo);
         } elseif (STATUS_SALE_ING == $order['status']) {
-            if (random_int(10, 20) % 1 != 0) {
+            if (random_int(10, 20) % 3 != 0) {
                 logger(sprintf('跳过:' . $order['id']));
                 continue;
             }
