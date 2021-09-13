@@ -149,7 +149,7 @@ class HuoBi
     {
         $path = '/v2/account/valuation';
         $param = [
-            'accountType' => 'spot',
+            'accountType' => '',
             'valuationCurrency' => 'BTC',  // BTC、CNY、USD、JPY、KRW、GBP、TRY、EUR、RUB、VND、HKD、TWD、MYR、SGD、AED、SAR
         ];
         $param = $this->makeSign("GET", $this->host, $path, $param);
