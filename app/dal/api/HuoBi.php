@@ -161,8 +161,8 @@ class HuoBi
 
     private function getRealUrl($path, $paramSign)
     {
-        $url = 'https://' . $this->host . $path . '?' . http_build_query($paramSign) . PHP_EOL;
-        fwrite(STDOUT, $url);
+        $url = 'https://' . $this->host . $path . '?' . http_build_query($paramSign);
+        fwrite(STDOUT, $url . PHP_EOL);
         return $url;
     }
 
@@ -171,7 +171,7 @@ class HuoBi
         $res_str = file_get_contents($url);
         Log::info(sprintf('请求返回: %s', $res_str));
         $res = json_decode($res_str, true);
-        if ((isset($res['status']) && 'ok' !== $res['status']) && (isset($res['code']) && $res['code'] !== 200)) {
+        if ((isset($res['status']) && 'ok' !== $res['status']) || (isset($res['code']) && $res['code'] !== 200)) {
             throw new APIException($res['err-msg']?? '请求错误' . json_encode($res));
         }
         return $res;
