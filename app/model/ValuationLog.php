@@ -15,4 +15,6 @@ use think\Model;
 class ValuationLog extends Model
 {
     //
+    protected $table = "valuation_log";
+
 }
