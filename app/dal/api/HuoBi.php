@@ -150,7 +150,7 @@ class HuoBi
         $path = '/v2/account/valuation';
         $param = [
             'accountType' => '',
-            'valuationCurrency' => 'BTC',  // BTC、CNY、USD、JPY、KRW、GBP、TRY、EUR、RUB、VND、HKD、TWD、MYR、SGD、AED、SAR
+            'valuationCurrency' => 'USD',  // BTC、CNY、USD、JPY、KRW、GBP、TRY、EUR、RUB、VND、HKD、TWD、MYR、SGD、AED、SAR
         ];
         $param = $this->makeSign("GET", $this->host, $path, $param);
         $res = $this->getQuery($this->getRealUrl($path, $param));
@@ -171,7 +171,7 @@ class HuoBi
         $res_str = file_get_contents($url);
         Log::info(sprintf('请求返回: %s', $res_str));
         $res = json_decode($res_str, true);
-        if ('ok' !== $res['status']) {
+        if ('ok' !== $res['status'] && (isset($res['code']) && $res['code'] !== 200)) {
             throw new APIException($res['err-msg']?? '请求错误' . json_encode($res));
         }
         return $res;
