@@ -309,9 +309,9 @@ class BuyCmd
             $bottomPrice = $this->formatPrice($bottomPrice);
 
             $num = $this->getBuyNum($itemTotal, $bottomPrice);
-            $salePrice = $this->formatPrice($top * 1.01);
-            if ($this->gridRate / 3 > 1) {
-                $tempRate = (($this->gridRate / 3) + 100) / 100;
+            $salePrice = $this->formatPrice($top * 1.013);
+            if ($this->gridRate / 5 >= 1) {
+                $tempRate = (($this->gridRate / 5) + 100) / 100;
                 $salePrice = $this->formatPrice($top * $tempRate);
             }
             $subOrder[] = [
@@ -320,13 +320,14 @@ class BuyCmd
                 'sale_price' => $this->formatPrice($salePrice),
                 'num' => $num,
             ];
-
             $top = $bottomPrice;
         }
         foreach ($subOrder as $idx => $item) {
-            $this->output->info("{$idx}: 买入金额{$item['buy_price']}, 卖出金额{$item['sale_price']}, 买入数量 {$item['num']}");
+            $profit = sprintf("%.2f", ($item['sale_price'] - $item['buy_price']) * $item['num']);
+            $this->output->info("{$idx}: 买入金额{$item['buy_price']}, 卖出金额{$item['sale_price']}, 买入数量 {$item['num']}, 收益: {$profit}");
         }
         $this->output->info("=====================");
+        $this->output->warning("{$this->symbol}:最高金额{$this->topPrice}, 最低金额{$bottomPrice}");
         $this->output->warning("{$this->symbol}:最高金额{$this->topPrice}, 最低金额{$bottomPrice}");
         $this->setConfirm();
         if (!$this->confirm) {

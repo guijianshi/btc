@@ -145,9 +145,25 @@ class HuoBi
         return ['state' => $state, 'field_cash_amount' => $amount];
     }
 
+    public function valuation()
+    {
+        $path = '/v2/account/valuation';
+        $param = [
+            'accountType' => 'spot',
+            'valuationCurrency' => 'BTC',  // BTC、CNY、USD、JPY、KRW、GBP、TRY、EUR、RUB、VND、HKD、TWD、MYR、SGD、AED、SAR
+        ];
+        $param = $this->makeSign("GET", $this->host, $path, $param);
+        $res = $this->getQuery($this->getRealUrl($path, $param));
+        $totalBalance = $res['data']['totalBalance'];
+        $todayProfit = $res['data']['todayProfit'];
+        return ['totalBalance' => $totalBalance, 'todayProfit' => $todayProfit];
+    }
+
     private function getRealUrl($path, $paramSign)
     {
-        return 'https://' . $this->host . $path . '?' . http_build_query($paramSign);
+        $url = 'https://' . $this->host . $path . '?' . http_build_query($paramSign) . PHP_EOL;
+        fwrite(STDOUT, $url);
+        return $url;
     }
 
     private function getQuery($url)
