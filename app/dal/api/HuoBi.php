@@ -145,18 +145,18 @@ class HuoBi
         return ['state' => $state, 'field_cash_amount' => $amount];
     }
 
-    public function valuation()
+    public function assetValuation($valuation = 'USD'):array
     {
-        $path = '/v2/account/valuation';
+        $path = '/v2/account/asset-valuation';
         $param = [
-            'accountType' => '',
-            'valuationCurrency' => 'USD',  // BTC、CNY、USD、JPY、KRW、GBP、TRY、EUR、RUB、VND、HKD、TWD、MYR、SGD、AED、SAR
+            'accountType' => 'spot',
+            'valuationCurrency' => $valuation,  // BTC、CNY、USD、JPY、KRW、GBP、TRY、EUR、RUB、VND、HKD、TWD、MYR、SGD、AED、SAR
         ];
         $param = $this->makeSign("GET", $this->host, $path, $param);
         $res = $this->getQuery($this->getRealUrl($path, $param));
-        $totalBalance = $res['data']['totalBalance'];
-        $todayProfit = $res['data']['todayProfit'];
-        return ['totalBalance' => $totalBalance, 'todayProfit' => $todayProfit];
+        $balance = $res['data']['balance'];
+        $timestamp = $res['data']['timestamp'];
+        return ['balance' => $balance, 'timestamp' => $timestamp, 'platform' => 'huobi', 'valuation' => $valuation];
     }
 
     private function getRealUrl($path, $paramSign)
