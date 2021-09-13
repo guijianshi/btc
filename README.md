@@ -142,6 +142,16 @@ alter table orders
 create index idx_grid_id
 	on orders (grid_id);
 
+
+CREATE TABLE `valuation_log` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `platform` varchar(10) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `valuation` varchar(10) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '计价类型',
+  `balance` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '当前价值',
+  `timestamp` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '时间戳毫秒',
+  `ctime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='账户总金额流水'
 ```
 
 
