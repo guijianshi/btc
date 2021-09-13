@@ -172,7 +172,7 @@ class HuoBi
         Log::info(sprintf('请求返回: %s', $res_str));
         $res = json_decode($res_str, true);
         if ('ok' !== $res['status']) {
-            throw new APIException($res['err-msg']?? '请求错误');
+            throw new APIException($res['err-msg']?? '请求错误' . json_encode($res));
         }
         return $res;
     }
