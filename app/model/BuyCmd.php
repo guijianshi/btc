@@ -352,9 +352,10 @@ class BuyCmd
             $order->status = Order::STATUS_WAIT;
             $this->buyPrice = $order->buy_price;
             $this->salePrice = $order->sale_price;
-            $this->num = $order->num;
             $this->total = 5.1;
             $this->setNum();
+
+            $order->num = $this->num;
             $order->save();
             return;
         }
