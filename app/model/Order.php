@@ -42,6 +42,15 @@ class Order extends Model
         return $query->limit(300)->select();
     }
 
+    public function getCancelOrders($symbol = '')
+    {
+        $query = $this->where('status', self::STATUS_CANCEL);
+        if (!empty($symbol)) {
+            $query = $query->where('symbol', $symbol);
+        }
+        return $query->limit(300)->select();
+    }
+
     public function delOldCancelTask():bool
     {
         $query = $this->where('status', 4)
@@ -54,5 +63,11 @@ class Order extends Model
     public function cancel()
     {
         $this->status = 4;
+    }
+
+    public function findById($id)
+    {
+        $query = $this->where('id', $id);
+        return $query->limit(1)->find();
     }
 }

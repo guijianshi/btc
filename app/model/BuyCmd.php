@@ -341,5 +341,38 @@ class BuyCmd
             'sub_order_list' => $subOrder,
         ];
     }
+
+    public function editByOrder(Order $order)
+    {
+        $this->symbol = $order->symbol;
+        $this->setAvg();
+        $this->output->info("请输入买入金额(金额为0快捷买入):");
+        $this->setBuyPrice();
+        if ($this->buyPrice === '0') {
+            $order->status = Order::STATUS_WAIT;
+            $this->buyPrice = $order->buy_price;
+            $this->salePrice = $order->sale_price;
+            $this->num = $order->num;
+            $this->total = 5.1;
+            $this->setNum();
+            $order->save();
+            return;
+        }
+
+        $this->setSalePrice();
+        $this->setTotal(function ($total) {
+            if ($total < 5.01) {
+                return "单笔买入金额不得小于5.01 usdt";
+            }
+            return '';
+        });
+        $this->setNum();
+        $this->setConfirm();
+        $order->buy_price = $this->buyPrice;
+        $order->sale_price = $this->salePrice;
+        $order->num = $this->num;
+        $order->save();
+        return;
+    }
 }
 

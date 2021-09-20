@@ -42,10 +42,27 @@ class Buy extends Command
             case 'c':
                 $this->clear($buyCmd);
                 break;
+            case 'e':
+                $this->edit($buyCmd);
+                break;
             default:
                 $output->info("命令错误");
                 break;
         }
+    }
+
+    public function edit(BuyCmd $buyCmd)
+    {
+        $orders = (new Order())->getCancelOrders();
+        $this->printOrders($orders);
+        $id = $buyCmd->getInput("请输入id:");
+        $order = (new Order())->findById($id);
+        if (empty($order) || $order->status != Order::STATUS_CANCEL) {
+            $this->output->error("id不存在");
+            return;
+        }
+        $buyCmd->editByOrder($order);;
+
     }
 
     public function clear(BuyCmd $buyCmd)
@@ -65,15 +82,7 @@ class Buy extends Command
         if ($mod === 'm') {
             $this->output->info("打印普通任务列表");
             $orders = (new Order())->getRunningOrders();
-            $this->output->info("id  \tsymbol  \tbuy_price  \tsale_price  \tstatus\t");
-            foreach ($orders as $order) {
-                $id = str_pad((string)$order['id'], 4);
-                $symbol = str_pad($order['symbol'], 8);
-                $buy_price = str_pad($order['buy_price'], 10);
-                $sale_price = str_pad($order['sale_price'], 10);
-                $status = str_pad((string)$order['status'], 5);
-                $this->output->info("$id\t{$symbol}\t{$buy_price}\t{$sale_price}\t{$status}");
-            }
+            $this->printOrders($orders);
         } else {
             $this->output->info("打印网格任务列表");
             $orders = (new GridOrder())->getRunningOrders();
@@ -149,5 +158,19 @@ class Buy extends Command
     {
         fwrite(STDOUT, $msg);
         return trim(fgets(STDIN));
+    }
+
+    public function printOrders($orders)
+    {
+        $this->output->info("id  \tsymbol  \tbuy_price  \tsale_price  \tstatus\t");
+        /* @var $order Order */
+        foreach ($orders as $order) {
+            $id = str_pad((string)$order['id'], 4);
+            $symbol = str_pad($order['symbol'], 8);
+            $buy_price = str_pad($order['buy_price'], 10);
+            $sale_price = str_pad($order['sale_price'], 10);
+            $status = str_pad((string)$order['status'], 5);
+            $this->output->info("$id\t{$symbol}\t{$buy_price}\t{$sale_price}\t{$status}");
+        }
     }
 }

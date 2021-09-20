@@ -11,6 +11,7 @@ class HuoBi
 
     private $accessKey;
     private $secret;
+    private $accountId;
 
     /**
      * HuoBi constructor.
@@ -20,6 +21,7 @@ class HuoBi
         $this->host = env('huobi.host');
         $this->accessKey = env('huobi.access_key');
         $this->secret = env('huobi.secret');
+        $this->accountId = env('huobi.$this->accountId');
     }
 
     public function kline(string $symbol, string $period = '1min', int $size = 10)
@@ -69,7 +71,7 @@ class HuoBi
     {
         $path = '/v1/order/orders/place';
         $post = [
-            'account-id' => ACCOUNT_ID,
+            'account-id' => $this->accountId,
             'symbol'     => $symbol,
             'type'       => $type, // 限价买入
             'amount'     => $amount,
@@ -123,7 +125,7 @@ class HuoBi
 
     public function balance()
     {
-        $path = sprintf('/v1/account/accounts/%s/balance', ACCOUNT_ID);
+        $path = sprintf('/v1/account/accounts/%s/balance', $this->accountId);
         $param = [
 
         ];
