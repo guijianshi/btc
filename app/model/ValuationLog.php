@@ -17,4 +17,11 @@ class ValuationLog extends Model
     //
     protected $table = "valuation_log";
 
+    public function selectByValuation(string $valuation)
+    {
+        return $this->where('valuation', $valuation)
+            ->order('ctime', 'desc')
+            ->limit(100)
+            ->select();
+    }
 }
