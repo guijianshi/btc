@@ -83,7 +83,7 @@ class Mexc implements IBTCAPI
     function info()
     {
         $path = '/open/api/v2/account/info';
-        return $this->get($path, '');
+        return $this->get($path, []);
     }
 
     private function post($path, $param)
