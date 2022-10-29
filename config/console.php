@@ -8,5 +8,6 @@ return [
         'btc:buy' => app\command\btc\Buy::class,
         'btc:auto' => app\command\btc\OrderAutoTask::class,
         'btc:query' => app\command\btc\Query::class,
+        'btc:test' => app\command\btc\Test::class,
     ],
 ];

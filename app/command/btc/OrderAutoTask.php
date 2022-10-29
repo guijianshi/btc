@@ -10,6 +10,8 @@ use app\model\OrderLog;
 use think\console\Command;
 use think\console\Input;
 use think\console\Output;
+use const app\dal\api\TypeBuy;
+use const app\dal\api\TypeSell;
 
 class OrderAutoTask extends Command
 {
@@ -38,7 +40,7 @@ class OrderAutoTask extends Command
             }
             try {
                 if ($order->status == Order::STATUS_WAIT) {
-                    $buyResp = $huobi->buy($order->symbol, 'buy-limit', $order->buy_price, $order->num);
+                    $buyResp = $huobi->buy($order->symbol, TypeBuy, $order->buy_price, $order->num);
                     $order->buy_order_id = $buyResp['order_id'];
                     $order->status = Order::STATUS_BUY_ING;
                     if ($order->save()) {
@@ -68,7 +70,7 @@ class OrderAutoTask extends Command
                         }
                     }
                 } elseif ($order->status == Order::STATUS_SALE_WAIT) {
-                    $buyResp = $huobi->buy($order->symbol, 'sell-limit', $order->sale_price, $order->num);
+                    $buyResp = $huobi->buy($order->symbol, TypeSell, $order->sale_price, $order->num);
                     $order->sale_order_id = $buyResp['order_id'];
                     $order->status = Order::STATUS_SALE_ING;
                     if ($order->save()) {

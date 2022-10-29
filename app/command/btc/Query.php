@@ -8,9 +8,7 @@ use app\model\ValuationLog;
 use think\console\Command;
 use think\console\Input;
 use think\console\input\Argument;
-use think\console\input\Option;
 use think\console\Output;
-use think\Model;
 
 class Query extends Command
 {
@@ -31,6 +29,11 @@ class Query extends Command
             $output->info("查询,并写入");
             $this->queryAndWrite();
         }
+    }
+
+    public function getAPI()
+    {
+        return (new HuoBi());
     }
 
     protected function query()

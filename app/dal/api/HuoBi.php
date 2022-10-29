@@ -5,7 +5,7 @@ namespace app\dal\api;
 use app\exception\APIException;
 use think\facade\Log;
 
-class HuoBi
+class HuoBi implements IBTCAPI
 {
     private $host;
 
@@ -62,18 +62,19 @@ class HuoBi
 
     /**
      * @param string $symbol
-     * @param string $type 'buy-limit'| 'sell-limit'
+     * @param int $type TypeBuy TypeSell
      * @param string $price 单价
      * @param string $amount 数量
      * @return array
+     * @throws APIException
      */
-    public function buy(string $symbol, string $type, string $price, string $amount)
+    public function buy(string $symbol, int $type, string $price, string $amount): array
     {
         $path = '/v1/order/orders/place';
         $post = [
             'account-id' => $this->accountId,
             'symbol'     => $symbol,
-            'type'       => $type, // 限价买入
+            'type'       => $type === TypeBuy ? "buy-limit" : "sell-limit", // 限价买入
             'amount'     => $amount,
             'price'      => $price,
         ];
